@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Verification - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Upload Verification Documents</h1>
+    
+    <div class="bg-white rounded-lg shadow p-8">
+        {% if user_verification.status == 'approved' %}
+            <div class="bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-lg mb-6">
+                <i class="fas fa-check-circle mr-2"></i>
+                <strong>Verified!</strong> Your documents have been approved.
+            </div>
+        {% elif user_verification.status == 'rejected' %}
+            <div class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg mb-6">
+                <i class="fas fa-times-circle mr-2"></i>
+                <strong>Rejected.</strong> {{ user_verification.rejection_reason }}
+            </div>
+        {% endif %}
+        
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Driving License -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-3">
+                    <i class="fas fa-id-card mr-2 text-teal-600"></i>
+                    Driving License
+                </label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <input type="file" name="driving_license" accept=".pdf,.jpg,.jpeg,.png" required 
+                           class="block w-full">
+                    <p class="text-sm text-gray-600 mt-2">PDF, JPG, or PNG (max 5MB)</p>
+                </div>
+            </div>
+            
+            <!-- License Number -->
+            <div>
+                <label for="license_number" class="block text-sm font-medium text-gray-700 mb-2">License Number</label>
+                <input type="text" id="license_number" name="license_number" required
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                       placeholder="DL-0123456789">
+            </div>
+            
+            <!-- License Expiry -->
+            <div>
+                <label for="license_expiry_date" class="block text-sm font-medium text-gray-700 mb-2">License Expiry Date</label>
+                <input type="date" id="license_expiry_date" name="license_expiry_date" required
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600">
+            </div>
+            
+            <!-- Profile Photo -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-3">
+                    <i class="fas fa-camera mr-2 text-teal-600"></i>
+                    Profile Photo
+                </label>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <input type="file" name="profile_photo" accept="image/*" required 
+                           class="block w-full">
+                    <p class="text-sm text-gray-600 mt-2">JPG or PNG (max 5MB)</p>
+                </div>
+            </div>
+            
+            <!-- Submit -->
+            <button type="submit" class="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold">
+                <i class="fas fa-upload mr-2"></i> Upload Documents
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

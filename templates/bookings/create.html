@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Book {{ car.title }} - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Book {{ car.title }}</h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <form method="POST" class="bg-white rounded-lg shadow p-8 space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Start Date*</label>
+                    <input type="date" id="start_date" name="start_date" required min="{{ min_date }}"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+                
+                <div>
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">End Date*</label>
+                    <input type="date" id="end_date" name="end_date" required min="{{ min_date }}"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+                
+                <div>
+                    <label for="pickup_location" class="block text-sm font-medium text-gray-700 mb-2">Pickup Location</label>
+                    <input type="text" id="pickup_location" name="pickup_location"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                           placeholder="Where to pick up">
+                </div>
+                
+                <div>
+                    <label for="dropoff_location" class="block text-sm font-medium text-gray-700 mb-2">Dropoff Location</label>
+                    <input type="text" id="dropoff_location" name="dropoff_location"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                           placeholder="Where to drop off">
+                </div>
+                
+                <div>
+                    <label for="renter_notes" class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                    <textarea id="renter_notes" name="renter_notes" rows="4"
+                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                             placeholder="Any special requests?"></textarea>
+                </div>
+                
+                <button type="submit" class="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold">
+                    <i class="fas fa-check mr-2"></i> Request Booking
+                </button>
+            </form>
+        </div>
+        
+        <!-- Summary -->
+        <div>
+            <div class="bg-white rounded-lg shadow p-6 sticky top-20 space-y-6">
+                <h3 class="text-lg font-bold text-gray-900">Booking Summary</h3>
+                
+                <div class="border-b pb-4">
+                    <p class="text-gray-600 text-sm">Car</p>
+                    <p class="font-semibold text-gray-900">{{ car.title }}</p>
+                </div>
+                
+                <div class="border-b pb-4">
+                    <p class="text-gray-600 text-sm">Price per Day</p>
+                    <p class="font-semibold text-gray-900">₹{{ car.price_per_day }}</p>
+                </div>
+                
+                <div class="border-b pb-4">
+                    <p class="text-gray-600 text-sm">Total Days</p>
+                    <p id="total_days" class="font-semibold text-gray-900">-</p>
+                </div>
+                
+                <div>
+                    <p class="text-gray-600 text-sm">Total Price</p>
+                    <p id="total_price" class="text-3xl font-bold text-teal-600">₹0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const startInput = document.getElementById('start_date');
+    const endInput = document.getElementById('end_date');
+    const daysDisplay = document.getElementById('total_days');
+    const priceDisplay = document.getElementById('total_price');
+    const pricePerDay = {{ car.price_per_day }};
+    
+    function updatePrice() {
+        if (startInput.value && endInput.value) {
+            const start = new Date(startInput.value);
+            const end = new Date(endInput.value);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            
+            if (days > 0) {
+                daysDisplay.textContent = days;
+                priceDisplay.textContent = '₹' + (days * pricePerDay);
+            }
+        }
+    }
+    
+    startInput.addEventListener('change', updatePrice);
+    endInput.addEventListener('change', updatePrice);
+</script>
+{% endblock %}

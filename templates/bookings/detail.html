@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Details - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Booking Details</h1>
+    
+    <div class="bg-white rounded-lg shadow p-8 space-y-6">
+        <!-- Status -->
+        <div class="flex items-center justify-between pb-4 border-b">
+            <span class="text-lg font-semibold text-gray-900">Status</span>
+            <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold
+                {% if booking.status == 'pending' %}bg-yellow-100 text-yellow-800
+                {% elif booking.status == 'approved' %}bg-green-100 text-green-800
+                {% elif booking.status == 'active' %}bg-blue-100 text-blue-800
+                {% elif booking.status == 'completed' %}bg-gray-100 text-gray-800
+                {% else %}bg-red-100 text-red-800
+                {% endif %}">
+                {{ booking.get_status_display }}
+            </span>
+        </div>
+        
+        <!-- Car Info -->
+        <div class="pb-4 border-b">
+            <p class="text-gray-600 text-sm mb-2">Car</p>
+            <p class="text-xl font-bold text-gray-900">{{ booking.car.title }}</p>
+        </div>
+        
+        <!-- Dates -->
+        <div class="grid grid-cols-2 gap-4 pb-4 border-b">
+            <div>
+                <p class="text-gray-600 text-sm mb-2">Start Date</p>
+                <p class="font-semibold text-gray-900">{{ booking.start_date }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm mb-2">End Date</p>
+                <p class="font-semibold text-gray-900">{{ booking.end_date }}</p>
+            </div>
+        </div>
+        
+        <!-- Pricing -->
+        <div class="grid grid-cols-3 gap-4 pb-4 border-b">
+            <div>
+                <p class="text-gray-600 text-sm mb-2">Days</p>
+                <p class="font-semibold text-gray-900">{{ booking.total_days }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm mb-2">Price/Day</p>
+                <p class="font-semibold text-gray-900">₹{{ booking.price_per_day }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600 text-sm mb-2">Total</p>
+                <p class="text-2xl font-bold text-teal-600">₹{{ booking.total_price }}</p>
+            </div>
+        </div>
+        
+        <!-- Locations -->
+        {% if booking.pickup_location or booking.dropoff_location %}
+            <div class="pb-4 border-b space-y-3">
+                {% if booking.pickup_location %}
+                    <div>
+                        <p class="text-gray-600 text-sm mb-1">Pickup Location</p>
+                        <p class="font-semibold text-gray-900">{{ booking.pickup_location }}</p>
+                    </div>
+                {% endif %}
+                {% if booking.dropoff_location %}
+                    <div>
+                        <p class="text-gray-600 text-sm mb-1">Dropoff Location</p>
+                        <p class="font-semibold text-gray-900">{{ booking.dropoff_location }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <!-- Actions -->
+        {% if user == booking.owner and booking.status == 'pending' %}
+            <div class="flex gap-4">
+                <form method="POST" action="{% url 'approve_booking' booking.id %}" class="flex-1">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
+                        <i class="fas fa-check mr-2"></i> Approve
+                    </button>
+                </form>
+                <form method="POST" action="{% url 'reject_booking' booking.id %}" class="flex-1">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition font-semibold"
+                           onclick="return confirm('Are you sure?')">
+                        <i class="fas fa-times mr-2"></i> Reject
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+        
+        <!-- Back -->
+        <div class="text-center pt-4">
+            <a href="{% url 'my_bookings' %}" class="text-teal-600 hover:text-teal-700 font-semibold">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Bookings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

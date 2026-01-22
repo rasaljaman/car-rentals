@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ car.title }} - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left: Images -->
+        <div class="lg:col-span-2">
+            {% if primary_image %}
+                <div class="mb-4">
+                    <img src="{{ primary_image.image.url }}" alt="{{ car.title }}" class="w-full rounded-lg shadow-lg h-96 object-cover">
+                </div>
+            {% endif %}
+            
+            <!-- Thumbnails -->
+            {% if images.count > 1 %}
+                <div class="grid grid-cols-4 gap-2">
+                    {% for image in images %}
+                        <img src="{{ image.image.url }}" alt="Thumbnail" class="rounded-lg cursor-pointer hover:opacity-75 h-24 object-cover">
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Car Specs -->
+            <div class="bg-white rounded-lg shadow p-6 mt-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Specifications</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                        <p class="text-gray-600 text-sm">Year</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ car.year }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm">Mileage</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ car.mileage }}km</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm">Transmission</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ car.transmission|title }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm">Seats</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ car.seats }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Description -->
+            <div class="bg-white rounded-lg shadow p-6 mt-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">About This Car</h2>
+                <p class="text-gray-600 leading-relaxed">{{ car.description }}</p>
+            </div>
+            
+            <!-- Reviews -->
+            {% if reviews %}
+                <div class="bg-white rounded-lg shadow p-6 mt-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Reviews</h2>
+                    <div class="space-y-4">
+                        {% for review in reviews %}
+                            <div class="border-b pb-4 last:border-b-0">
+                                <div class="flex justify-between items-start mb-2">
+                                    <strong class="text-gray-900">{{ review.reviewer.first_name }}</strong>
+                                    <div class="flex items-center">
+                                        {% for i in "12345" %}
+                                            <i class="fas fa-star {% if i <= review.rating %}text-yellow-400{% else %}text-gray-300{% endif %} text-sm"></i>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <p class="text-gray-600">{{ review.comment }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Right: Booking Section -->
+        <div>
+            <!-- Price Card -->
+            <div class="bg-white rounded-lg shadow p-6 sticky top-20 space-y-4">
+                <div>
+                    <p class="text-gray-600 text-sm">Price per day</p>
+                    <p class="text-4xl font-bold text-teal-600">₹{{ car.price_per_day }}</p>
+                </div>
+                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_booking' car.id %}" class="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold text-center block">
+                        <i class="fas fa-calendar mr-2"></i> Book Now
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}?next={% url 'car_detail' car.id %}" class="w-full bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold text-center block">
+                        Login to Book
+                    </a>
+                {% endif %}
+                
+                <!-- Owner Info -->
+                <div class="border-t pt-4">
+                    <p class="text-sm text-gray-600 mb-3">Listed by</p>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://ui-avatars.com/api/?name={{ car.owner.first_name }}+{{ car.owner.last_name }}&background=0d8abc&color=fff&size=40" 
+                             alt="{{ car.owner.email }}" class="h-10 w-10 rounded-full">
+                        <div>
+                            <p class="font-semibold text-gray-900">{{ car.owner.first_name }} {{ car.owner.last_name }}</p>
+                            <p class="text-xs text-gray-600">Owner</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Location -->
+                <div class="border-t pt-4">
+                    <p class="text-sm text-gray-600 mb-2">Location</p>
+                    <p class="font-semibold text-gray-900">
+                        <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>{{ car.location }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

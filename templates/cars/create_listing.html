@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Car Listing - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">List Your Car</h1>
+    
+    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-lg shadow p-8 space-y-6">
+        {% csrf_token %}
+        
+        <!-- Basic Info -->
+        <fieldset class="border rounded-lg p-4">
+            <legend class="text-lg font-bold text-gray-900 mb-4">Basic Information</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="id_title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                    {{ form.title }}
+                </div>
+                <div>
+                    <label for="id_brand" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                    {{ form.brand }}
+                </div>
+                <div>
+                    <label for="id_model" class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                    {{ form.model }}
+                </div>
+                <div>
+                    <label for="id_year" class="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                    {{ form.year }}
+                </div>
+            </div>
+        </fieldset>
+        
+        <!-- Specifications -->
+        <fieldset class="border rounded-lg p-4">
+            <legend class="text-lg font-bold text-gray-900 mb-4">Specifications</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="id_fuel_type" class="block text-sm font-medium text-gray-700 mb-2">Fuel Type</label>
+                    {{ form.fuel_type }}
+                </div>
+                <div>
+                    <label for="id_transmission" class="block text-sm font-medium text-gray-700 mb-2">Transmission</label>
+                    {{ form.transmission }}
+                </div>
+                <div>
+                    <label for="id_seats" class="block text-sm font-medium text-gray-700 mb-2">Seats</label>
+                    {{ form.seats }}
+                </div>
+                <div>
+                    <label for="id_color" class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                    {{ form.color }}
+                </div>
+                <div>
+                    <label for="id_mileage" class="block text-sm font-medium text-gray-700 mb-2">Mileage (km)</label>
+                    {{ form.mileage }}
+                </div>
+            </div>
+        </fieldset>
+        
+        <!-- Rental Details -->
+        <fieldset class="border rounded-lg p-4">
+            <legend class="text-lg font-bold text-gray-900 mb-4">Rental Details</legend>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="id_price_per_day" class="block text-sm font-medium text-gray-700 mb-2">Price per Day (₹)</label>
+                    {{ form.price_per_day }}
+                </div>
+                <div>
+                    <label for="id_location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    {{ form.location }}
+                </div>
+            </div>
+            <div>
+                <label for="id_description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                {{ form.description }}
+            </div>
+        </fieldset>
+        
+        <!-- Registration -->
+        <fieldset class="border rounded-lg p-4">
+            <legend class="text-lg font-bold text-gray-900 mb-4">Registration & Documents</legend>
+            <div>
+                <label for="id_registration_number" class="block text-sm font-medium text-gray-700 mb-2">Registration Number</label>
+                {{ form.registration_number }}
+            </div>
+            <div class="mt-4">
+                <label for="id_rc_document" class="block text-sm font-medium text-gray-700 mb-2">RC Document*</label>
+                {{ form.rc_document }}
+            </div>
+            <div class="mt-4">
+                <label for="id_insurance_document" class="block text-sm font-medium text-gray-700 mb-2">Insurance Document</label>
+                {{ form.insurance_document }}
+            </div>
+        </fieldset>
+        
+        <!-- Errors -->
+        {% if form.non_field_errors %}
+            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Submit -->
+        <div class="flex gap-4">
+            <button type="submit" class="bg-teal-600 text-white px-8 py-3 rounded-lg hover:bg-teal-700 transition font-semibold">
+                <i class="fas fa-plus mr-2"></i> Create Listing
+            </button>
+            <a href="{% url 'dashboard' %}" class="bg-gray-300 text-gray-900 px-8 py-3 rounded-lg hover:bg-gray-400 transition font-semibold">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

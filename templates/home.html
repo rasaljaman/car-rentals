@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Sura Rentals - Rent Cars from Your Neighbors{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-teal-600 to-teal-800 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="fade-in">
+                <div class="inline-block bg-teal-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                    ✓ Verified & Trusted Platform
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    Rent Cars from Your Neighbors
+                </h1>
+                <p class="text-xl text-teal-100 mb-8">
+                    Discover the easiest way to rent or share cars in your community. Safe, affordable, and convenient.
+                </p>
+                
+                <!-- Search Box -->
+                <form method="GET" action="{% url 'browse_cars' %}" class="bg-white rounded-lg p-4 shadow-lg slide-in">
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" name="location" placeholder="Enter your location..." 
+                               class="flex-1 px-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                        <button type="submit" class="bg-teal-600 text-white px-8 py-3 rounded-lg hover:bg-teal-700 transition font-semibold">
+                            <i class="fas fa-search mr-2"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="hidden md:block">
+                <img src="https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=600&h=400&fit=crop" 
+                     alt="Car rental" class="rounded-lg shadow-xl">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-center mb-4">Why Choose Sura Rentals?</h2>
+        <p class="text-center text-gray-600 mb-12 text-lg">Trusted by thousands of car owners and renters</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="text-center p-8 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-shield-alt text-teal-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Verified Users</h3>
+                <p class="text-gray-600">
+                    All users undergo document verification for your safety and peace of mind.
+                </p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="text-center p-8 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-users text-orange-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Community-Driven</h3>
+                <p class="text-gray-600">
+                    Rent from real people in your neighborhood. Build trust and relationships.
+                </p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="text-center p-8 rounded-lg hover:shadow-lg transition-shadow">
+                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-chart-line text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Affordable Rates</h3>
+                <p class="text-gray-600">
+                    Save up to 40% compared to traditional car rental services.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Cars Section -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-12">
+            <div>
+                <h2 class="text-4xl font-bold mb-2">Latest Cars</h2>
+                <p class="text-gray-600">Recently added verified vehicles</p>
+            </div>
+            <a href="{% url 'browse_cars' %}" class="text-teal-600 hover:text-teal-700 font-semibold">
+                View all <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        
+        {% if latest_cars %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for car in latest_cars %}
+                    <a href="{% url 'car_detail' car.id %}" class="group">
+                        <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            <!-- Car Image -->
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                {% if car.images.first %}
+                                    <img src="{{ car.images.first.image.url }}" alt="{{ car.title }}" 
+                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center bg-gray-300">
+                                        <i class="fas fa-car text-gray-400 text-4xl"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Badge -->
+                                <div class="absolute top-3 right-3 bg-teal-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    Verified
+                                </div>
+                            </div>
+                            
+                            <!-- Car Info -->
+                            <div class="p-4">
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">{{ car.title }}</h3>
+                                
+                                <div class="flex items-center text-gray-600 text-sm mb-3">
+                                    <i class="fas fa-map-marker-alt mr-2 text-teal-600"></i>
+                                    {{ car.location }}
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-2xl font-bold text-teal-600">₹{{ car.price_per_day }}</span>
+                                        <span class="text-sm text-gray-600">/day</span>
+                                    </div>
+                                    
+                                    {% if car.rating > 0 %}
+                                        <div class="flex items-center">
+                                            {% for i in "12345" %}
+                                                {% if i <= car.rating %}
+                                                    <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                                {% else %}
+                                                    <i class="fas fa-star text-gray-300 text-xs"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Specs -->
+                                <div class="mt-4 pt-4 border-t flex justify-between text-xs text-gray-600">
+                                    <span><i class="fas fa-gas-pump mr-1"></i> {{ car.fuel_type }}</span>
+                                    <span><i class="fas fa-cog mr-1"></i> {{ car.transmission }}</span>
+                                    <span><i class="fas fa-users mr-1"></i> {{ car.seats }} seats</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-inbox text-gray-400 text-5xl mb-4"></i>
+                <p class="text-gray-600 text-lg">No cars available yet. Check back soon!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-teal-600 text-white py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-4">Ready to start your journey?</h2>
+        <p class="text-xl text-teal-100 mb-8">
+            Join thousands of car owners and renters in your community
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_car_listing' %}" class="bg-white text-teal-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition font-semibold">
+                    List Your Car
+                </a>
+                <a href="{% url 'browse_cars' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-teal-600 transition font-semibold">
+                    Browse Cars
+                </a>
+            {% else %}
+                <a href="{% url 'signup_step1' %}" class="bg-white text-teal-600 px-8 py-3 rounded-lg hover:bg-gray-100 transition font-semibold">
+                    Get Started
+                </a>
+                <a href="{% url 'browse_cars' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-teal-600 transition font-semibold">
+                    Browse Cars
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

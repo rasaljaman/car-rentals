@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
+        <p class="text-gray-600">Manage your cars, bookings, and profile</p>
+    </div>
+    
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <!-- Total Cars -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">My Cars</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ my_cars.count }}</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-lg">
+                    <i class="fas fa-car text-blue-600 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Total Bookings -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">My Bookings</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ my_bookings.count }}</p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-lg">
+                    <i class="fas fa-calendar text-green-600 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pending Bookings -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">Pending</p>
+                    <p class="text-3xl font-bold text-yellow-600">{{ pending_bookings }}</p>
+                </div>
+                <div class="bg-yellow-100 p-3 rounded-lg">
+                    <i class="fas fa-hourglass text-yellow-600 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Verification Status -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">Status</p>
+                    <p class="text-lg font-bold {% if user.is_verified %}text-green-600{% else %}text-orange-600{% endif %}">
+                        {% if user.is_verified %}Verified{% else %}Pending{% endif %}
+                    </p>
+                </div>
+                <div class="{% if user.is_verified %}bg-green-100{% else %}bg-orange-100{% endif %} p-3 rounded-lg">
+                    <i class="{% if user.is_verified %}fas fa-check-circle text-green-600{% else %}fas fa-clock text-orange-600{% endif %} text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="{% url 'create_car_listing' %}" class="bg-teal-600 text-white p-4 rounded-lg hover:bg-teal-700 transition text-center">
+                        <i class="fas fa-plus text-2xl mb-2"></i>
+                        <p class="font-semibold">List a Car</p>
+                    </a>
+                    <a href="{% url 'browse_cars' %}" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition text-center">
+                        <i class="fas fa-search text-2xl mb-2"></i>
+                        <p class="font-semibold">Browse Cars</p>
+                    </a>
+                    <a href="{% url 'my_bookings' %}" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 transition text-center">
+                        <i class="fas fa-calendar text-2xl mb-2"></i>
+                        <p class="font-semibold">My Bookings</p>
+                    </a>
+                    <a href="{% url 'edit_profile' %}" class="bg-orange-600 text-white p-4 rounded-lg hover:bg-orange-700 transition text-center">
+                        <i class="fas fa-user text-2xl mb-2"></i>
+                        <p class="font-semibold">Edit Profile</p>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Recent Cars -->
+            {% if my_cars %}
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900">My Cars</h2>
+                        <a href="{% url 'create_car_listing' %}" class="text-teal-600 hover:text-teal-700 font-semibold">
+                            <i class="fas fa-plus mr-2"></i> Add Car
+                        </a>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        {% for car in my_cars|slice:":5" %}
+                            <div class="border rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-gray-900">{{ car.title }}</h3>
+                                        <p class="text-sm text-gray-600">
+                                            <i class="fas fa-map-marker-alt mr-1"></i> {{ car.location }}
+                                            <span class="mx-2">•</span>
+                                            ₹{{ car.price_per_day }}/day
+                                        </p>
+                                        <div class="mt-2">
+                                            <span class="inline-block px-2 py-1 rounded text-xs font-semibold
+                                                {% if car.status == 'verified' %}bg-green-100 text-green-800
+                                                {% elif car.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                                {% else %}bg-red-100 text-red-800
+                                                {% endif %}">
+                                                {{ car.get_status_display }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <a href="{% url 'edit_car_listing' car.id %}" class="block text-teal-600 hover:text-teal-700 text-sm">
+                                            <i class="fas fa-edit mr-1"></i> Edit
+                                        </a>
+                                        <a href="{% url 'delete_car_listing' car.id %}" class="block text-red-600 hover:text-red-700 text-sm" onclick="return confirm('Delete this car?')">
+                                            <i class="fas fa-trash mr-1"></i> Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if my_cars.count > 5 %}
+                        <a href="{% url 'dashboard' %}" class="text-teal-600 hover:text-teal-700 text-sm font-semibold mt-4">
+                            View all cars →
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Profile Card -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Profile</h3>
+                <div class="text-center mb-4">
+                    <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=0d8abc&color=fff&size=100" 
+                         alt="{{ user.email }}" class="w-20 h-20 rounded-full mx-auto mb-3">
+                    <h4 class="font-bold text-gray-900">{{ user.first_name }} {{ user.last_name }}</h4>
+                    <p class="text-sm text-gray-600">{{ user.email }}</p>
+                </div>
+                <a href="{% url 'edit_profile' %}" class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition text-center font-semibold block">
+                    Edit Profile
+                </a>
+            </div>
+            
+            <!-- Verification Card -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Verification</h3>
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-gray-700">Email</span>
+                        <i class="{% if user.is_email_verified %}fas fa-check-circle text-green-600{% else %}fas fa-times-circle text-red-600{% endif %}"></i>
+                    </div>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-gray-700">Phone</span>
+                        <i class="{% if user.is_phone_verified %}fas fa-check-circle text-green-600{% else %}fas fa-times-circle text-red-600{% endif %}"></i>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-medium text-gray-700">Documents</span>
+                        <i class="{% if user.is_verified %}fas fa-check-circle text-green-600{% else %}fas fa-times-circle text-red-600{% endif %}"></i>
+                    </div>
+                </div>
+                {% if not user.is_verified %}
+                    <a href="{% url 'upload_verification' %}" class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition text-center font-semibold block text-sm">
+                        Upload Documents
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

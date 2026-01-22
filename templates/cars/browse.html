@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Cars - Sura Rentals{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Browse Cars</h1>
+    
+    <!-- Filters -->
+    <form method="GET" class="bg-white rounded-lg shadow p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div>
+                <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                <input type="text" id="location" name="location" value="{{ filters.location }}" 
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                       placeholder="City">
+            </div>
+            <div>
+                <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">Fuel Type</label>
+                <select id="fuel_type" name="fuel_type" 
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600">
+                    <option value="">All Types</option>
+                    {% for value, label in fuel_types %}
+                        <option value="{{ value }}" {% if filters.fuel_type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="min_price" class="block text-sm font-medium text-gray-700 mb-2">Min Price</label>
+                <input type="number" id="min_price" name="min_price" value="{{ filters.min_price }}" 
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                       placeholder="₹0">
+            </div>
+            <div>
+                <label for="max_price" class="block text-sm font-medium text-gray-700 mb-2">Max Price</label>
+                <input type="number" id="max_price" name="max_price" value="{{ filters.max_price }}" 
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                       placeholder="₹99999">
+            </div>
+        </div>
+        <button type="submit" class="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition font-semibold">
+            <i class="fas fa-search mr-2"></i> Apply Filters
+        </button>
+    </form>
+    
+    <!-- Cars Grid -->
+    {% if cars %}
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ cars.count }} cars available</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for car in cars %}
+                <a href="{% url 'car_detail' car.id %}" class="group">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <!-- Car Image -->
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            {% if car.images.first %}
+                                <img src="{{ car.images.first.image.url }}" alt="{{ car.title }}" 
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-gray-300">
+                                    <i class="fas fa-car text-gray-400 text-4xl"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Car Info -->
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ car.title }}</h3>
+                            
+                            <div class="flex items-center text-gray-600 text-sm mb-3">
+                                <i class="fas fa-map-marker-alt mr-2 text-teal-600"></i>
+                                {{ car.location }}
+                            </div>
+                            
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-2xl font-bold text-teal-600">₹{{ car.price_per_day }}</span>
+                                    <span class="text-sm text-gray-600">/day</span>
+                                </div>
+                                {% if car.rating > 0 %}
+                                    <div class="flex items-center">
+                                        <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                        <span class="text-sm text-gray-600 ml-1">{{ car.rating }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Specs -->
+                            <div class="border-t pt-3 flex justify-between text-xs text-gray-600">
+                                <span><i class="fas fa-gas-pump mr-1"></i> {{ car.fuel_type|title }}</span>
+                                <span><i class="fas fa-cog mr-1"></i> {{ car.transmission|title }}</span>
+                                <span><i class="fas fa-users mr-1"></i> {{ car.seats }} seats</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-inbox text-gray-400 text-5xl mb-4"></i>
+            <p class="text-gray-600 text-lg">No cars found. Try adjusting your filters.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
