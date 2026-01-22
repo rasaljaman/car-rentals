@@ -1,0 +1,171 @@
+You are a senior full-stack engineer and product designer.
+
+Build a production-ready, modern full-stack web application named **“Sura Rentals”** — an OLX-style peer-to-peer car rental platform.
+
+====================================
+TECH STACK (STRICT – DO NOT CHANGE)
+====================================
+
+Backend:
+- Django (latest LTS)
+- Django REST Framework (DRF)
+- PostgreSQL
+- Django Auth (custom user model)
+- Django OTP / Email + Phone verification
+- Django Storage (Supabase-compatible or S3-compatible)
+
+Frontend:
+- Django Templates OR Django + REST API (headless-ready)
+- Tailwind CSS
+- Alpine.js or minimal JS for interactivity
+- Framer Motion–style animations (CSS/JS equivalents)
+- Mobile-first, light theme
+
+Authentication:
+- Email + Password
+- Email OTP verification
+- Phone OTP verification
+- Session-based auth + JWT (optional)
+
+Hosting:
+- Backend: Render / Railway / VPS
+- Database: PostgreSQL
+- Static & Media files: Supabase Storage or S3
+- Production-ready configuration assumed
+
+====================================
+CORE PRODUCT REQUIREMENTS
+====================================
+
+1) AUTHENTICATION (MODERN & SECURE)
+- Multi-step signup flow:
+  Step 1: User details (name, location, email, phone, password, confirm password)
+  Step 2: CAPTCHA / human verification
+  Step 3: Email + phone OTP verification
+- Login with email + password
+- Session handling
+- Protected routes / views
+- Logout
+- Clean error handling and success messages
+
+2) USER ROLES
+- Normal User:
+  - Can rent a car
+  - Can list a car
+- Admin:
+  - Verify users
+  - Verify cars
+  - Approve / reject documents
+
+Use Django Groups or Role-based permissions.
+
+3) HOME PAGE
+- Hero section with strong headline
+- Location-based car search
+- Browse latest cars
+- Smooth animations (fade, slide)
+- OLX-style listing cards
+- SEO-friendly Django views
+
+4) CAR LISTING (RENT OUT)
+- Add car form:
+  - Title, brand, model, year, fuel type
+  - Price per day
+  - Location
+  - Description
+  - Upload multiple car images
+- Upload RC document
+- Car status: Pending / Verified / Rejected
+- Owner can edit / delete own cars
+
+5) BROWSE & RENT CARS
+- Filter by location, price, fuel type
+- Car details page:
+  - Image gallery
+  - Specs
+  - Owner info
+  - Availability
+- Booking request system:
+  - Pending / Approved / Rejected
+
+6) DASHBOARD (SIDEBAR LAYOUT)
+- My Profile
+- My Cars
+- My Bookings
+- Upload Driving License
+- Verification status
+- Logout
+
+7) VERIFICATION SYSTEM
+- User uploads:
+  - Driving license
+  - Profile photo
+- Admin verifies:
+  - Users
+  - Cars
+- Only verified users can rent cars
+
+8) ADMIN PANEL
+- Django Admin customized UI
+- View all users
+- Verify documents
+- Verify cars
+- Ban or deactivate users
+- Audit logs (optional)
+
+====================================
+DATABASE SCHEMA (REQUIRED)
+====================================
+
+Models must include:
+- Custom User (email-based login)
+- Profile
+- Car
+- CarImage
+- Booking
+- Verification
+- Review
+
+Use:
+- Foreign keys
+- Proper indexing
+- Status fields
+- Timestamps
+- Soft deletes where needed
+
+====================================
+UX / UI REQUIREMENTS
+====================================
+
+- Clean light theme
+- Professional typography
+- Smooth transitions & animations
+- Skeleton loaders
+- Toast notifications
+- Mobile-first responsive layout
+
+====================================
+SECURITY
+====================================
+
+- CSRF protection
+- Permission checks
+- Object-level access control
+- Secure file uploads
+- Environment variables for secrets
+- Production-ready Django settings
+
+====================================
+DELIVERABLES
+====================================
+
+- Complete Django project structure
+- Apps separated by responsibility
+- Models, serializers, views, URLs
+- Auth & OTP logic
+- Admin configuration
+- Frontend templates or API endpoints
+- Clean, readable, maintainable code
+- Ready for production deployment
+
+Build the project step-by-step and ensure everything works together as a real production-grade Django application.
