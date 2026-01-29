@@ -176,18 +176,21 @@ def login_view(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             
-            user = authenticate(request, username=email, password=password)
-            
-            if user is not None:
-                if not user.is_active:
-                    messages.error(request, 'Your account has been deactivated.')
-                elif not user.is_email_verified:
-                    messages.error(request, 'Please verify your email first.')
+            # Get user by email and verify password
+            try:
+                user = CustomUser.objects.get(email=email)
+                if user.check_password(password):
+                    if not user.is_active:
+                        messages.error(request, 'Your account has been deactivated.')
+                    elif not user.is_email_verified:
+                        messages.error(request, 'Please verify your email first.')
+                    else:
+                        login(request, user)
+                        next_url = request.GET.get('next', 'dashboard')
+                        return redirect(next_url)
                 else:
-                    login(request, user)
-                    next_url = request.GET.get('next', 'dashboard')
-                    return redirect(next_url)
-            else:
+                    messages.error(request, 'Invalid email or password.')
+            except CustomUser.DoesNotExist:
                 messages.error(request, 'Invalid email or password.')
     else:
         form = LoginForm()

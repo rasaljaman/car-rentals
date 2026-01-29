@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Test Car - Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Add Test Car</h1>
+        <p class="text-gray-600">Quickly add a car for testing. It will be auto-verified.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Make -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Make *</label>
+                    <input type="text" name="brand" required placeholder="e.g., Toyota" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Model -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Model *</label>
+                    <input type="text" name="model" required placeholder="e.g., Innova" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Year -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Year *</label>
+                    <input type="number" name="year" value="2024" required min="2000" max="2030" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Fuel Type -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Fuel Type *</label>
+                    <select name="fuel_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {% for value, label in fuel_types %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Transmission -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Transmission *</label>
+                    <select name="transmission" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        {% for value, label in transmissions %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Seats -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Seats *</label>
+                    <input type="number" name="seats" value="5" required min="2" max="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
+                    <input type="text" name="location" required placeholder="e.g., Mumbai" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Price Per Day -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Price Per Day (₹) *</label>
+                    <input type="number" name="price_per_day" required min="0" step="100" placeholder="e.g., 1500" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Registration Number -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Registration Number *</label>
+                    <input type="text" name="registration_number" required placeholder="e.g., MH02AB1234" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <!-- Images -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Car Images (Optional)</label>
+                <div class="mb-4">
+                    <div class="flex items-center justify-center w-full">
+                        <label for="images" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                <p class="text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-500">PNG, JPG up to 10MB each</p>
+                            </div>
+                            <input id="images" type="file" name="images" multiple accept="image/*" class="hidden">
+                        </label>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Upload multiple images. First image will be set as primary.</p>
+                </div>
+                
+                <!-- Image Preview Area -->
+                <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Previews will be added here -->
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition">
+                    ✅ Add Car
+                </button>
+                <a href="{% url 'admin_dashboard' %}" class="bg-gray-400 hover:bg-gray-500 text-white px-8 py-3 rounded-lg font-semibold transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Sample Data Section -->
+    <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h3 class="text-lg font-bold text-blue-900 mb-4">🚗 Sample Test Cars</h3>
+        <div class="space-y-3 text-sm text-blue-800">
+            <p><strong>Car 1:</strong> Toyota Innova 2024 • Petrol • ₹2000/day • Mumbai</p>
+            <p><strong>Car 2:</strong> Honda City 2023 • Petrol • ₹1200/day • Delhi</p>
+            <p><strong>Car 3:</strong> Hyundai Creta 2024 • Diesel • ₹1800/day • Bangalore</p>
+            <p><strong>Car 4:</strong> Maruti Swift 2023 • Petrol • ₹800/day • Pune</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Image handling
+    const imageInput = document.getElementById('images');
+    const imagePreview = document.getElementById('imagePreview');
+    const dropZone = imageInput.parentElement;
+    
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight(e) {
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    }
+    
+    function unhighlight(e) {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    }
+    
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        imageInput.files = files;
+        handleImages(files);
+    }
+    
+    // Handle file selection
+    imageInput.addEventListener('change', function() {
+        handleImages(this.files);
+    });
+    
+    function handleImages(files) {
+        imagePreview.innerHTML = '';
+        let fileArray = Array.from(files);
+        
+        if (fileArray.length === 0) {
+            imagePreview.innerHTML = '<p class="text-gray-500 col-span-full text-center">No images selected</p>';
+            return;
+        }
+        
+        fileArray.forEach((file, index) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-24 object-cover';
+                    
+                    const badge = document.createElement('span');
+                    if (index === 0) {
+                        badge.className = 'absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded';
+                        badge.textContent = 'Primary';
+                    } else {
+                        badge.className = 'absolute top-2 right-2 bg-gray-500 text-white text-xs font-bold px-2 py-1 rounded';
+                        badge.textContent = `#${index + 1}`;
+                    }
+                    
+                    const fileName = document.createElement('p');
+                    fileName.className = 'text-xs text-gray-700 p-2 truncate';
+                    fileName.textContent = file.name;
+                    
+                    div.appendChild(img);
+                    div.appendChild(badge);
+                    div.appendChild(fileName);
+                    imagePreview.appendChild(div);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
+{% endblock %}

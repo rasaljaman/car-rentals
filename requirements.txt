@@ -15,3 +15,5 @@ gunicorn==21.2.0
 whitenoise==6.6.0
 django-crispy-forms==2.1
 crispy-tailwind==1.0.3
+supabase==2.1.1
+python-jwt==1.7.1

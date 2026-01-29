@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'apps.bookings.apps.BookingsConfig',
     'apps.verification.apps.VerificationConfig',
     'apps.core.apps.CoreConfig',
+    'apps.admin_panel',
 ]
 
 MIDDLEWARE = [
@@ -75,13 +76,47 @@ WSGI_APPLICATION = 'carrentals.wsgi.application'
 
 # Use PostgreSQL in production, SQLite in development
 DATABASE_URL = config('DATABASE_URL', default=None)
+SUPABASE_URL = config('SUPABASE_URL', default=None)
+SUPABASE_KEY = config('SUPABASE_KEY', default=None)
 
 if DATABASE_URL:
-    # Production: PostgreSQL
+    # Production: PostgreSQL (Supabase or other)
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
+elif SUPABASE_URL and SUPABASE_KEY:
+    # Supabase: Using Supabase's PostgreSQL database
+    # Extract credentials from Supabase connection string
+    supabase_user = config('SUPABASE_USER', default='postgres')
+    supabase_password = config('SUPABASE_PASSWORD', default='')
+    supabase_host = config('SUPABASE_HOST', default='')
+    supabase_port = config('SUPABASE_PORT', default='6543', cast=int)
+    supabase_db = config('SUPABASE_DB', default='postgres')
+    
+    if supabase_host:  # Use individual credentials if provided
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': supabase_db,
+                'USER': supabase_user,
+                'PASSWORD': supabase_password,
+                'HOST': supabase_host,
+                'PORT': supabase_port,
+                'CONN_MAX_AGE': 600,
+                'OPTIONS': {
+                    'sslmode': 'require',
+                }
+            }
+        }
+    else:
+        # Development: SQLite
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     # Development: SQLite
     DATABASES = {
@@ -183,12 +218,30 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 MAX_UPLOAD_SIZE = 10485760  # 10MB
 
 # Storage Configuration (Supabase/S3 in production)
-STORAGES = {
-    'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
-        'LOCATION': MEDIA_ROOT,
+USE_SUPABASE_STORAGE = config('USE_SUPABASE_STORAGE', default=False, cast=bool)
+
+if USE_SUPABASE_STORAGE and SUPABASE_URL and SUPABASE_KEY:
+    # Use Supabase Storage
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+            'LOCATION': MEDIA_ROOT,
+        },
+        'supabase': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+            'LOCATION': MEDIA_ROOT,
+        }
     }
-}
+    # Note: Supabase storage integration is handled via apps.core.supabase_config
+    # Files are uploaded via Supabase SDK instead of Django storage
+else:
+    # Use local filesystem storage
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+            'LOCATION': MEDIA_ROOT,
+        }
+    }
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
