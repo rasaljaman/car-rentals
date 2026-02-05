@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block title %}Add Test Car - Admin{% endblock %}
@@ -220,3 +221,41 @@
     }
 </script>
 {% endblock %}
+=======
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Car</title>
+</head>
+<body>
+    <h2>Add New Car</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="text" name="name" placeholder="Car Name" required><br><br>
+        <input type="text" name="brand" placeholder="Brand" required><br><br>
+        <input type="number" step="0.01" name="price_per_day" placeholder="Price per day" required><br><br>
+        <input type="number" name="seats" placeholder="Seats" required><br><br>
+        
+        <input
+  type="number"
+  name="year"
+  placeholder="Manufacturing Year (e.g. 2020)"
+  required
+>
+<br><br>
+
+        <input type="text" name="fuel_type" placeholder="Fuel type" required><br><br>
+        <input type="text" name="transmission" placeholder="Transmission" required><br><br>
+        <input type="text" name="location" placeholder="Location (City)" required><br><br>
+
+        <textarea name="description" placeholder="Description"></textarea><br><br>
+
+        <input type="file" name="images" multiple required><br><br>
+
+        <button type="submit">Add Car</button>
+    </form>
+</body>
+</html>
+>>>>>>> 9a7e9f9 (database connection started)

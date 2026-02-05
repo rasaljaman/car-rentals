@@ -5,8 +5,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.core import views
+from apps.core import views as core_views
+from apps.cars import views as car_views
+
 
 urlpatterns = [
+    path("control-panel-9xA7/", core_views.admin_login),
+    path("admin-dashboard/", core_views.admin_dashboard),
+    path("admin/add-car/", car_views.admin_add_car),
     path('admin/', admin.site.urls),
     path('admin-panel/', include('apps.admin_panel.urls')),
     path('', include('apps.accounts.urls')),

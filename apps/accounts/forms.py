@@ -134,64 +134,71 @@ class ProfileEditForm(forms.ModelForm):
 
 
 class CarListingForm(forms.ModelForm):
-    """Form for creating/editing car listings."""
-    
+    """Form for creating/editing car listings (NO FILE UPLOADS)."""
+
     class Meta:
         model = Car
-        fields = ['title', 'brand', 'model', 'year', 'fuel_type', 'price_per_day',
-                 'location', 'description', 'registration_number', 'mileage',
-                 'transmission', 'seats', 'color', 'rc_document', 'insurance_document']
+        fields = [
+            "title",
+            "brand",
+            "model",
+            "year",
+            "fuel_type",
+            "price_per_day",
+            "location",
+            "description",
+            "registration_number",
+            "mileage",
+            "transmission",
+            "seats",
+            "color",
+        ]
+
         widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-                'placeholder': 'e.g., Honda City 2020'
+            "title": forms.TextInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                "placeholder": "e.g., Honda City 2020",
             }),
-            'brand': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-                'placeholder': 'Brand'
+            "brand": forms.TextInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                "placeholder": "Brand",
             }),
-            'model': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-                'placeholder': 'Model'
+            "model": forms.TextInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                "placeholder": "Model",
             }),
-            'year': forms.NumberInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
+            "year": forms.NumberInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
-            'fuel_type': forms.Select(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
+            "fuel_type": forms.Select(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
-            'price_per_day': forms.NumberInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-                'step': '0.01'
+            "price_per_day": forms.NumberInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                "step": "0.01",
             }),
-            'location': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-                'placeholder': 'City'
+            "location": forms.TextInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                "placeholder": "City",
             }),
-            'description': forms.Textarea(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-                'rows': 4,
-                'placeholder': 'Describe your car'
+            "description": forms.Textarea(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
+                "rows": 4,
+                "placeholder": "Describe your car",
             }),
-            'registration_number': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
+            "registration_number": forms.TextInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
-            'mileage': forms.NumberInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
+            "mileage": forms.NumberInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
-            'transmission': forms.Select(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
+            "transmission": forms.Select(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
-            'seats': forms.NumberInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
+            "seats": forms.NumberInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
-            'color': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600',
-            }),
-            'rc_document': forms.FileInput(attrs={
-                'class': 'block w-full text-sm text-gray-500'
-            }),
-            'insurance_document': forms.FileInput(attrs={
-                'class': 'block w-full text-sm text-gray-500'
+            "color": forms.TextInput(attrs={
+                "class": "w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600",
             }),
         }
